@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .invoice {
+            width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 200px;
+        }
+        
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .invoice-header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        
+        .invoice-header p {
+            margin: 0;
+            font-size: 18px;
+        }
+        
+        .order-details {
+            margin-bottom: 20px;
+        }
+        
+        .order-details p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+        
+        .invoice-footer {
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .invoice-footer a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+        
+        .invoice-footer a:hover {
+            background-color: #0056b3;
+        }
+
+        #invoice{
+            background-color: rgb(37, 203, 87);
+                }
+    </style>
+</head>
+<body>
+    <div class="invoice">
+        <div class="invoice-header">
+            <h1>Invoice</h1>
+            <p>Order ID: {{ order.order_id }}</p>
+        </div>
+        
+        <div class="order-details">
+            <p>Name : {{user.username}}</p>
+            <p>Order Date:{{ order.order_date }}</p>
+            
+            <p> Address:</p>
+            <p>{{ address.street }}</p>
+            <p>{{ order.address.city }}, {{ order.address.state }}</p>
+            <p>{{ order.address.country }}, {{ order.address.zip_code }}</p>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    
+                    
+                    <td>{{ order.total_cost }}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <a href="{% url 'invoice' order.order_id %}" class="btn btn-primary" id="invoice" download>Download Invoice</a>
+
+        <div class="invoice-footer">
+            <a href="{% url 'home' %}" class="btn btn-secondary">Return to Homepage</a>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

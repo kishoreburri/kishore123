@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+</head>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .profile-card {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .profile-card p {
+            margin-bottom: 15px;
+        }
+        
+        .profile-form button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .address-container {
+            margin-top: 30px;
+        }
+        
+        .address-card {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .address-card p {
+            margin-bottom: 10px;
+        }
+        
+        .add-address-form {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .add-address-form label {
+            font-weight: bold;
+        }
+        
+        .add-address-form input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .add-address-form button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>User Profile</h1>
+        
+        <div class="profile-card">
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+          
+            <h3>Change Password</h3>
+            <form class="profile-form" method="post" action="{% url 'change_password' %}">
+                {% csrf_token %}
+                {{ password_form.as_p }}
+                <button type="submit" class="btn btn-primary">Change Password</button>
+                <a href="{% url 'home' %}" class="btn btn-secondary" id="home">Return to Home</a>
+
+            </form>
+        </div>
+        
+        <div class="address-container">
+            <h2>View Saved Addresses</h2>
+            {% if max_addresses_reached %}
+                <p>Maximum number of addresses reached. You cannot add more addresses.</p>
+            {% else %}
+                <button id="add-address-button" class="btn btn-primary">Add New Address</button>
+                <form id="add-address-form" class="add-address-form" method="post" action="{% url 'profile' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="street">Street:</label>
+                        <input type="text" id="street" name="street" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City:</label>
+                        <input type="text" id="city" name="city" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State:</label>
+                        <input type="text" id="state" name="state" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country:</label>
+                        <input type="text" id="country" name="country" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="zip_code">Zip Code:</label>
+                        <input type="text" id="zip_code" name="zip_code" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Address</button>
+                </form>
+            {% endif %}
+            
+            <hr>
+            
+            {% if saved %}
+                <p>Address saved successfully.</p>
+            {% endif %}
+            
+            {% for address in addresses %}
+                <div class="address-card">
+                    <p><strong>Street:</strong> {{ address.street }}</p>
+                    <p><strong>City:</strong> {{ address.city }}</p>
+                    <p><strong>State:</strong> {{ address.state }}</p>
+                    <p><strong>Country:</strong> {{ address.country }}</p>
+                    <p><strong>Zip Code:</strong> {{ address.zip_code }}</p>
+                    <a href="{% url 'edit_address' address.id %}" class="btn btn-primary">Edit Address</a>
+                    <a href="{% url 'delete_address' address.id %}" class="btn btn-danger">Delete Address</a>
+                </div>
+            {% empty %}
+                <p>No addresses found.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        const addAddressButton = document.getElementById('add-address-button');
+        const addAddressForm = document.getElementById('add-address-form');
+        
+        addAddressButton.addEventListener('click', function() {
+            addAddressForm.style.display = 'block';
+        });
+    </script>
+</body>
+</html>

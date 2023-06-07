@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1, h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+        form {
+            margin-top: 20px;
+        }
+        .total-cost {
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #333;
+            text-decoration: none;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #555;
+        }
+        .empty-cart {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Checkout</h1>
+    <h2>Order Summary</h2>
+    {% if cart_items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.product.price }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ total_cost }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p class="total-cost">Total Cost: {{ total_cost }}</p>
+        <div class="form-container">
+            <h3>Shipping Address</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Proceed to Payment</button>
+            </form>
+        </div>
+    {% else %}
+        <p class="empty-cart">Your cart is empty.</p>
+    {% endif %}
+</body>
+</html>

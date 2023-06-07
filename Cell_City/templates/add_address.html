@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Addresses</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1, h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .address-card {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .address-card p {
+            margin: 5px 0;
+        }
+        .empty-addresses {
+            color: #777;
+        }
+        .form-container {
+            max-width: 500px;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Addresses</h1>
+    {% if addresses %}
+        {% for address in addresses %}
+            <div class="address-card">
+                <p><strong>Street:</strong> {{ address.street }}</p>
+                <p><strong>City:</strong> {{ address.city }}</p>
+                <p><strong>State:</strong> {{ address.state }}</p>
+                <p><strong>Country:</strong> {{ address.country }}</p>
+                <p><strong>Zip Code:</strong> {{ address.zip_code }}</p>
+                <!-- Add any additional information or actions related to the addresses here -->
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="empty-addresses">No addresses found.</p>
+    {% endif %}
+    
+    <!-- Add the form for adding a new address below -->
+    <div class="form-container">
+        <h2>Add New Address</h2>
+        <form method="POST" action="{% url 'add_address' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save Address</button>
+        </form>
+    </div>
+</body>
+</html>

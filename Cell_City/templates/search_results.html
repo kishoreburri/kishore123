@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <style>
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .card-item {
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 576px) {
+            .card-item {
+                flex-basis: calc(33.33% - 20px);
+            }
+        }
+
+        .card-buttons {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Search Results for "{{ query }}"</h1>
+
+        {% if results %}
+        <h2>Products</h2>
+        <div class="card-container">
+            {% for product in results %}
+                <div class="card-item card">
+                    <a href="{% url 'product_detail' product.id %}">
+                        <img src="{{ product.image_url }}" alt="Product Image" class="card-img-top">
+                    </a>
+                    <div class="card-body">
+                        <h3 class="card-title">{{ product.name }}</h3>
+                        <p class="card-text">Price: {{ product.price }}</p>
+                        <div class="card-buttons">
+                            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-success">Add to Cart</a>
+                            <a href="{% url 'add_to_wishlist' product.id %}" class="btn btn-secondary">Add to Wishlist</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No products found.</p>
+    {% endif %}
+   
+    </div>
+</body>
+</html>

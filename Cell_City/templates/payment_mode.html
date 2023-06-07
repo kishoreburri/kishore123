@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Payment Mode</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .payment-option {
+            display: none;
+        }
+
+        .payment-option.show {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-actions {
+            text-align: center;
+        }
+
+        .form-actions button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .form-actions button:hover {
+            background-color: #45a049;
+        }
+    </style>
+<script>
+    function showPaymentOption(paymentMode) {
+        var paymentOptions = document.getElementsByClassName('payment-option');
+        for (var i = 0; i < paymentOptions.length; i++) {
+            paymentOptions[i].classList.remove('show');
+        }
+        var selectedPaymentOption = document.getElementById(paymentMode);
+        selectedPaymentOption.classList.add('show');
+    }
+
+    function validateForm() {
+        var selectedPaymentMode = document.getElementById('payment_mode').value;
+        if (selectedPaymentMode === '') {
+            alert('Please select a payment mode.');
+            return false;
+        }
+        var selectedPaymentOption = document.getElementById(selectedPaymentMode);
+        var requiredFields = selectedPaymentOption.getElementsByClassName('required');
+        for (var i = 0; i < requiredFields.length; i++) {
+            if (requiredFields[i].value === '') {
+                alert('Please enter all the required details.');
+                return false;
+            }
+        }
+        return true;
+    }
+</script>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Payment Mode</h1>
+        <div class="form-group">
+            <label for="payment_mode">Payment Mode:</label>
+            <select id="payment_mode" name="payment_mode" onchange="showPaymentOption(this.value)">
+                <option value="">Select Payment Mode</option>
+                <option value="credit_card">Credit Card</option>
+                <option value="debit_card">Debit Card</option>
+                <option value="net_banking">Net Banking</option>
+                <option value="cash_on_delivery">Cash on Delivery</option>
+                <option value="upi">UPI</option>
+            </select>
+        </div>
+
+        <div id="credit_card" class="payment-option">
+            <div class="form-group">
+                <label for="card_number">Card Number:</label>
+                <input type="text" id="card_number" name="card_number" placeholder="Enter your card number" required>
+            </div>
+            <div class="form-group">
+                <label for="expiry_date">Expiry Date:</label>
+                <input type="text" id="expiry_date" name="expiry_date" placeholder="Enter expiry date (MM/YY)" required>
+            </div>
+            <div class="form-group">
+                <label for="cvv">CVV:</label>
+                <input type="password" id="cvv" name="cvv" placeholder="Enter CVV" required>
+            </div>
+        </div>
+
+        <div id="debit_card" class="payment-option">
+            <div class="form-group" >
+                <label for="debit_card_number">Card Number:</label>
+                <input type="text" id="debit_card_number" name="debit_card_number" placeholder="Enter your card number" required>
+            </div>
+            <div class="form-group">
+                <label for="debit_expiry_date">Expiry Date:</label>
+                <input type="text" id="debit_expiry_date" name="debit_expiry_date" placeholder="Enter expiry date (MM/YY)" required>
+            </div>
+            <div class="form-group">
+                <label for="debit_cvv">CVV:</label>
+                <input type="password" id="debit_cvv" name="debit_cvv" placeholder="Enter CVV" required>
+            </div>
+        </div>
+
+        <div id="net_banking" class="payment-option">
+            <div class="form-group">
+                <label for="bank">Select Bank:</label>
+                <select id="bank" name="bank">
+                    <option value="">Select</option>
+                    <option value="bank1">State Bank Of India</option>
+                    <option value="bank2">ICICI</option>
+                    <option value="bank3">Kotak Bank</option>
+                    <option value="bank4">Canara Bank</option>
+                    <option value="bank5">HDFC Bank</option>
+                    <option value="bank6">Union Bank</option>
+                    <option value="bank7">IDFC Bank</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="netbanking_username">Username:</label>
+                <input type="text" id="netbanking_username" name="netbanking_username" placeholder="Enter your username" required>
+            </div>
+            <div class="form-group">
+                <label for="netbanking_password">Password:</label>
+                <input type="password" id="netbanking_password" name="netbanking_password" placeholder="Enter your password" required>
+            </div>
+        </div>
+
+        <div id="cash_on_delivery" class="payment-option">
+            <p>Please keep the exact cash ready for payment upon delivery.</p>
+        </div>
+
+        <div id="upi" class="payment-option">
+            <div class="form-group">
+                <label for="upi_id">UPI ID:</label>
+                <input type="text" id="upi_id" name="upi_id" placeholder="Enter your UPI ID" value = required>
+            </div>
+        </div>
+        <form method="POST">
+            {% csrf_token %}
+        <div class="form-actions" aria-required="true">
+            <button type="submit" onclick="return validateForm()">Proceed to Payment</button>
+        </div>
+        </form>
+    </div>
+</body>
+</html>

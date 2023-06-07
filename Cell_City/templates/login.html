@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+</head>
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <form id="login-form" method="post">
+            {% csrf_token %}
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <p id="error-message" class="error-message"></p>
+            <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission
+
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+
+            // Perform login authentication using JavaScript or make an AJAX request
+
+            // If authentication fails, display error message
+            var errorElement = document.getElementById('error-message');
+            errorElement.textContent = "Invalid username or password.";
+        });
+    </script>
+</body>
+</html>
+
+<style>
+    body {
+      background-image:url("https://imgeng.jagran.com/images/2023/apr/amazon%20blockbuster%20value%20days%20sale1681457736787.jpg");
+      background-size:cover;
+      font-family: Arial, sans-serif;
+      
+    
+    }
+    .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: inherit;
+            padding: 20px;
+            margin-top: 200px;
+        }
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+        form {
+            margin-top:25px;
+        }
+
+        form div {
+         margin-bottom: 10px;
+
+         }
+         label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+
+
+        }
+        input[type="text"],
+        input[type="password"] {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #45a049;
+  }
+
+        
+        button:hover {
+            background-color: #555;
+        }
+        p {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  a {
+    color: #3326f0;
+  }
+
+   a :hover{
+    color: aqua;
+   }
+   .error-message {
+    color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+    </style>
