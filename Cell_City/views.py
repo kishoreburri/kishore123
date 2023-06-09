@@ -11,6 +11,7 @@ from django.http import HttpResponse
 from .forms import SignUpForm, ProfileForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+from  .forms import FeedbackForm
 
 
 def home(request):
@@ -260,3 +261,19 @@ def addresses(request):
     }
 
     return render(request, 'addresses.html', context)
+
+
+def feedback(request):
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('thank_you')
+    else:
+        form = FeedbackForm()
+    
+    return render(request, 'feedback.html', {'form': form})
+
+
+def thank_you(request):
+    return render(request, 'thank_you.html')

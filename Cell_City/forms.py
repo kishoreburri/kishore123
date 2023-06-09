@@ -1,5 +1,6 @@
 from django import forms
 from .models import Address
+from .models import Feedback
 from django.contrib.auth.forms import UserCreationForm, User
 
 
@@ -26,3 +27,10 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['date_of_birth', 'mobile_number']
+
+
+
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = ['name', 'email', 'message',]

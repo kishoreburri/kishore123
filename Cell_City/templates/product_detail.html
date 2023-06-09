@@ -13,7 +13,7 @@
     <header>    
         <nav class="navbar navbar-expand-lg navbar-dark bg-black">
               <div class="container-fluid">
-                <h1 id="title">𝓒𝓮𝓵𝓵 𝓒𝓲𝓽𝔂</h1>
+                <img src="https://www.cellcitysarnia.com/image/cache/catalog/logo-269x203.png" alt="">
                 
                 <form class="d-flex" role="search" method="GET" action="{% url 'search_results' %}">
                   <input class="form-control me-2" type="text" name="query" placeholder="Search...">
@@ -75,13 +75,39 @@
             </div>
         </div>
     </div>
-    <footer class="footersection"> 
-    
-        <h1 >Instagram <i class="fa-brands fa-instagram"></i></h1>
-        <h1 >Facebook <i class="fa-brands fa-facebook"></i></h1> 
-        <h1 >Twitter <i class="fa-brands fa-twitter"></i></h1> 
-        <h1>whatsapp <i class="fa-brands fa-whatsapp"></i></h1>
-    
+</main>   
+    <footer>
+      <div class="footer">
+        <div class="footer-content">
+            <div class="footer-section feeback">
+                <p><center>Help us in serving you better<center> </p>
+                <p><a href="{% url 'feedback'%}" class="feedback">  Give Feedback </a></p>
+            
+            </div>
+      
+      
+      
+      <div class="footer">
+        <div class="footer-section contact-form">
+          <div class="contact">
+              <span><i class="fa fa-phone"></i> &nbsp;987-654-123</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span><i class="fa fa-envelope"></i> &nbsp; info@Cell_City.com</span>
+          </div><br>
+          <div class="socials">
+              <a href=""  style="color: white; text-decoration: none;" i class="fa-brands fa-facebook"></i></a>
+              <a href="" style="color: white; text-decoration: none;" i class="fa-brands fa-instagram"></i></a>
+              <a href="" style="color: white; text-decoration: none;" i class="fa-brands fa-twitter"></i></a>
+              <a href="" style="color: white; text-decoration: none;" i class="fa-brands fa-youtube"></i></a>
+          </div>
+      </div>     
+    </div>
+  
+  <div class="footer-bottom">
+      &copy; Cell_City.com | Designed by Cell_City Team<br>
+      Copyright &copy 2023 Cell_City Online Private Limited, India. All rights reserved
+  </div>
+  </div>
+  </footer>
     
     </footer>
     <style>
@@ -126,19 +152,68 @@
 #cart{
   margin-left: 200px;
 }
-.footersection{
-    background-color: rgb(90, 88, 88);
-    color:white;
-    text-align: center;
-    font-size:6px;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;
-}  
-.footersection h1{
-    margin: 5px 10px;
+footer
+    {
+        height: 50vh;
+        background-color: bisque;
+        
+    }
+    
+    .container
+    {
+        margin: 0 auto;
+        position: relative;
+        width: 90%;
+        height: 40%;
+        padding-bottom: 5%;
+       
+    }
+    footer
+  {
+      background: #303036;
+      color: #d3d3d3;
+      height:40vh;
+      position: relative;
+    
+  
+  }
+ .footer .footer-content .footer-section .contact-form .socials
+  {
+      text-decoration: none;
+      
+      color:white;
+  }
+.contact-form{
+  text-align: center;
+  margin-top:80px;
 }
+.footer-bottom{
+  text-align: center;
+  margin-top:25px;
+}
+
+.feedback
+  {
+      background-color:white;
+      color:red;
+      position: absolute;
+      left:700px;
+      padding: 10px;
+      border: 1px solid white;
+      border-radius: 200px;
+      display: inline-block;
+      text-decoration: none;
+      margin-bottom:200px;
+   
+     
+      
+  
+  }
+  
+  .feedback:hover
+  {
+      background-color: #303036;
+  }
 
     </style>
 

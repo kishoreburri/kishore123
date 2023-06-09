@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+
+</head>
+<body>
+    <main>
+      
+        <section class = "feed">
+            <h1>Feedback Form</h1>
+            <form method="POST" action="{% url 'feedback' %}">
+               {% csrf_token %}
+               <br>
+               {{ form.as_p }}
+               <label for="">Reviews</label>
+               <select name="" id="">
+                <option value="">worst</option>
+                <option value="">Good</option>
+                <option value="">Average</option>
+                <option value="">Excellent</option>
+            </select>
+               <br>
+               <br>
+               <input type="submit" id="submitbtn" >
+             
+            </form>
+          </section>
+   </main>
+</body>
+</html>
+
+
+<style>
+   *{
+    margin:0px;
+    padding:0px;
+
+}
+
+body{
+    background-image: url("https://thumbs.dreamstime.com/b/customer-experiences-concept-group-diversity-people-giving-feedback-via-mobile-phone-negative-to-positive-review-poor-184871851.jpg");
+    background-size: cover;
+}
+
+
+.feed{
+    margin-right: 450px;
+
+    
+}
+
+.feed h1{
+    color:white;
+}
+form{
+    
+    height:400px;
+    width:410px;
+    background-color:black;
+ 
+    padding: 10px;
+    border-radius: 10px;
+    color:white;
+    
+} 
+input{
+    padding:7px;
+    margin:7px;
+    border-radius: 10px;
+    border-style: none;
+    color:black;
+    font-size: 15px;
+}
+select{
+    padding:5px 10px;
+    border-radius: 5px;
+    background-color: white;
+}
+::placeholder{
+    color:rgb(94, 92, 92);
+}
+label,textarea{
+    margin:10px;
+}
+#submitbtn{
+    color:black;
+  margin-left:190px;
+  padding:10px 20px;
+  background-color:whitesmoke;
+ 
+}
+#submitbtn:hover{
+    background-color: rgb(140, 229, 140);
+
+   
+
+} 
+</style>

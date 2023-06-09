@@ -29,7 +29,8 @@ urlpatterns = [
     path('change_password/', views.change_password, name='change_password'),
     path('edit_address/<int:address_id>/', views.edit_address, name='edit_address'),
     path('delete_address/<int:address_id>/', views.delete_address, name='delete_address'),
-  
+   path('feedback/', views.feedback, name='feedback'),
+    path('thank-you/', views.thank_you, name='thank_you'),
 ]
 
 

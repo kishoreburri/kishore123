@@ -94,4 +94,11 @@ User._meta.get_field('groups').remote_field.related_name = 'user_custom_set'
 User._meta.get_field('user_permissions').remote_field.related_name = 'user_custom_set'
 
 
+class Feedback(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    def str(self):
+        return self.name
