@@ -8,10 +8,13 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .forms import SignUpForm, ProfileForm
+from .forms import SignUpForm, LoginForm, FeedbackForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-from  .forms import FeedbackForm
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+
+
 
 
 def home(request):
@@ -166,35 +169,37 @@ def search_results(request):
     }
     return render(request, 'search_results.html', context)
 
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            login(request, form.get_user())
+            return redirect('home')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'login.html', {'form': form})
 
 def signup(request):
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
             login(request, user)
             return redirect('home')
     else:
-        form = SignUpForm()
+        form = UserCreationForm()
     return render(request, 'signup.html', {'form': form})
 
-
-def login_view(request):
-    if request.method == 'POST':
-        error_message = "Invalid username or password."
-
-        return render(request, 'login.html', {'error_message': error_message})
-    else:
-        return render(request, 'login.html')
+def logout_view(request):
+    logout(request)
+    return redirect('home')
 
 @login_required
 def my_orders(request):
     orders = Order.objects.filter(user=request.user)
     return render(request, 'my_orders.html', {'orders': orders})
 
+from django.contrib.auth.forms import UserChangeForm
 
 @login_required
 def profile(request):
@@ -202,7 +207,7 @@ def profile(request):
     max_addresses_reached = False
 
     if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=request.user)
+        form = UserChangeForm(request.POST, instance=request.user)
         address_form = AddressForm(request.POST)
 
         if form.is_valid() and address_form.is_valid():
@@ -215,7 +220,7 @@ def profile(request):
             else:
                 max_addresses_reached = True
     else:
-        form = ProfileForm(instance=request.user)
+        form = UserChangeForm(instance=request.user)
         address_form = AddressForm()
 
     addresses = Address.objects.filter(customer=request.user)

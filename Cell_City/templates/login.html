@@ -12,34 +12,12 @@
         <h1>Login</h1>
         <form id="login-form" method="post">
             {% csrf_token %}
-            <div>
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <p id="error-message" class="error-message"></p>
+            {{ form.as_p }}
             <button type="submit">Login</button>
         </form>
         <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
     </div>
 
-    <script>
-        document.getElementById('login-form').addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent form submission
-
-            var username = document.getElementById('username').value;
-            var password = document.getElementById('password').value;
-
-            // Perform login authentication using JavaScript or make an AJAX request
-
-            // If authentication fails, display error message
-            var errorElement = document.getElementById('error-message');
-            errorElement.textContent = "Invalid username or password.";
-        });
-    </script>
 </body>
 </html>
 

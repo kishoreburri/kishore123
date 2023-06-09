@@ -22,14 +22,14 @@ urlpatterns = [
     path('my_orders/', views.my_orders, name='my_orders'),
     path('contact/', views.contact, name='contact'),
     path('search/', views.search_results, name='search_results'),
-    path('accounts/signup/', views.signup, name='signup'),
-    path('accounts/login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('login/', views.login_view, name='login'),
+    path('signup/', views.signup, name='signup'),
+    path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile, name='profile'),
     path('change_password/', views.change_password, name='change_password'),
     path('edit_address/<int:address_id>/', views.edit_address, name='edit_address'),
     path('delete_address/<int:address_id>/', views.delete_address, name='delete_address'),
-   path('feedback/', views.feedback, name='feedback'),
+    path('feedback/', views.feedback, name='feedback'),
     path('thank-you/', views.thank_you, name='thank_you'),
 ]
 
