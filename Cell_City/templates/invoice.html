@@ -80,12 +80,17 @@
         
         <div class="order-details">
             <p>Name : {{user.username}}</p>
+            <p>Email : {{user.email}}</p>
             <p>Order Date:{{ order.order_date }}</p>
             
             <p> Address:</p>
-            <p>{{ address.street }}</p>
-            <p>{{ order.address.city }}, {{ order.address.state }}</p>
-            <p>{{ order.address.country }}, {{ order.address.zip_code }}</p>
+                <div class="address-card">
+                    <p><strong>Street:</strong> {{ address.street }}</p>
+                    <p><strong>City:</strong> {{ address.city }}</p>
+                    <p><strong>State:</strong> {{ address.state }}</p>
+                    <p><strong>Country:</strong> {{ address.country }}</p>
+                    <p><strong>Zip Code:</strong> {{ address.zip_code }}</p>
+                </div>
         </div>
         <table class="table table-striped">
             <thead>

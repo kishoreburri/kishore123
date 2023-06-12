@@ -59,14 +59,12 @@
                 <p><strong>State:</strong> {{ address.state }}</p>
                 <p><strong>Country:</strong> {{ address.country }}</p>
                 <p><strong>Zip Code:</strong> {{ address.zip_code }}</p>
-                <!-- Add any additional information or actions related to the addresses here -->
             </div>
         {% endfor %}
     {% else %}
         <p class="empty-addresses">No addresses found.</p>
     {% endif %}
     
-    <!-- Add the form for adding a new address below -->
     <div class="form-container">
         <h2>Add New Address</h2>
         <form method="POST" action="{% url 'add_address' %}">

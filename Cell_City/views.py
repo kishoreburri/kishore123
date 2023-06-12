@@ -8,14 +8,11 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .forms import SignUpForm, LoginForm, FeedbackForm
+from .forms import SignUpForm, FeedbackForm, AddressForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-
-
-
 
 def home(request):
     mobile_brands = Brand.objects.all() 
@@ -114,9 +111,6 @@ def remove_from_wishlist(request, product_id):
         wishlist.products.remove(product)
     return redirect('wishlist')
 
-
-from .forms import AddressForm
-
 @login_required
 def checkout(request):
     user = request.user
@@ -181,13 +175,13 @@ def login_view(request):
 
 def signup(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect('home')
     else:
-        form = UserCreationForm()
+        form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
 
 def logout_view(request):
@@ -256,16 +250,16 @@ def change_password(request):
     
     return render(request, 'change_password.html', {'form': form})
 
-def addresses(request):
-    addresses = Address.objects.filter(customer=request.user)
-    form = AddressForm()
+# def addresses(request):
+#     addresses = Address.objects.filter(customer=request.user)
+#     form = AddressForm()
 
-    context = {
-        'addresses': addresses,
-        'form': form,
-    }
+#     context = {
+#         'addresses': addresses,
+#         'form': form,
+#     }
 
-    return render(request, 'addresses.html', context)
+#     return render(request, 'addresses.html', context)
 
 
 def feedback(request):
