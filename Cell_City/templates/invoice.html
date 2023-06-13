@@ -81,15 +81,15 @@
         <div class="order-details">
             <p>Name : {{user.username}}</p>
             <p>Email : {{user.email}}</p>
+            <p>Contact : {{order.address.mobile_number}}</p>
             <p>Order Date:{{ order.order_date }}</p>
-            
-            <p> Address:</p>
                 <div class="address-card">
-                    <p><strong>Street:</strong> {{ address.street }}</p>
-                    <p><strong>City:</strong> {{ address.city }}</p>
-                    <p><strong>State:</strong> {{ address.state }}</p>
-                    <p><strong>Country:</strong> {{ address.country }}</p>
-                    <p><strong>Zip Code:</strong> {{ address.zip_code }}</p>
+                    <h3>Delivery Address</h3>
+                    <p>Address Line 1: {{ order.address.address_line_1 }}</p>
+                    <p>Address Line 2: {{ order.address.address_line_2 }}</p>
+                    <p>City: {{ order.address.city }}</p>
+                    <p>State: {{ order.address.state }}</p>
+                    <p>Postal Code: {{ order.address.zip_code }}</p>
                 </div>
         </div>
         <table class="table table-striped">

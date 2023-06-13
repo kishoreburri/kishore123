@@ -10,7 +10,7 @@ class AddressForm(forms.ModelForm):
 
     class Meta:
         model = Address
-        fields = ['street', 'city', 'state', 'country', 'zip_code', 'mobile_number']
+        fields = ['address_line_1', 'address_line_2', 'city', 'state', 'country', 'zip_code', 'mobile_number']
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField()

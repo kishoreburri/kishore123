@@ -111,6 +111,13 @@ def remove_from_wishlist(request, product_id):
         wishlist.products.remove(product)
     return redirect('wishlist')
 
+from django.contrib.auth.decorators import login_required
+from .forms import AddressForm
+
+
+from django.contrib.auth.decorators import login_required
+from .forms import AddressForm
+
 @login_required
 def checkout(request):
     user = request.user
@@ -125,13 +132,16 @@ def checkout(request):
             address = form.save(commit=False)
             address.customer = user
             address.save()
-            order = Order.objects.create(user=user, total_cost=total_cost)
+            order = Order.objects.create(user=user, address=address, price=total_cost, total_cost=total_cost)
             cart_items.delete()
             return redirect('payment_mode', order_id=order.id)
     else:
         form = AddressForm()
 
     return render(request, 'checkout.html', {'form': form, 'cart_items': cart_items, 'total_cost': total_cost})
+
+
+
 
 @login_required
 def payment_mode(request, order_id):
@@ -250,16 +260,7 @@ def change_password(request):
     
     return render(request, 'change_password.html', {'form': form})
 
-# def addresses(request):
-#     addresses = Address.objects.filter(customer=request.user)
-#     form = AddressForm()
 
-#     context = {
-#         'addresses': addresses,
-#         'form': form,
-#     }
-
-#     return render(request, 'addresses.html', context)
 
 
 def feedback(request):

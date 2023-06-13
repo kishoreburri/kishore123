@@ -16,6 +16,14 @@
         <p>Order Date & Time: {{ order.order_date }}</p>
         <p>Total Cost: {{ order.total_cost }}</p>
 
+        <h3>Delivery Address</h3>
+            <p>Address Line 1: {{ order.address.address_line_1 }}</p>
+            <p>Address Line 2: {{ order.address.address_line_2 }}</p>
+            <p>City: {{ order.address.city }}</p>
+            <p>State: {{ order.address.state }}</p>
+            <p>Postal Code: {{ order.address.zip_code }}</p>
+            <p>Contact : {{order.address.mobile_number}}</p>
+
         <div class="btn-container">
             <a href="{% url 'invoice' order.order_id %}" class="btn btn-primary" id="invoice" target="_blank">View Invoice</a>
 
