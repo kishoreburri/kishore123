@@ -93,3 +93,4 @@ class Feedback(models.Model):
 
     def str(self):
         return self.name
+
