@@ -11,6 +11,8 @@
         body {
             font-family: Arial, sans-serif;
             padding: 20px;
+            background-color:burlywood;
+
         }
         h1, h2 {
             margin-bottom: 20px;
@@ -34,15 +36,15 @@
             border-radius: 5px;
             text-align: center;
         }
-        form {
+        /* form {
             margin-top: 20px;
-        }
+        } */
         .total-cost {
             font-weight: bold;
             font-size: 18px;
             margin-top: 20px;
         }
-        button {
+         /* button {
             display: inline-block;
             padding: 10px 15px;
             background-color: #333;
@@ -51,14 +53,44 @@
             border: none;
             cursor: pointer;
             transition: background-color 0.3s ease;
-        }
+        } */
         button:hover {
-            background-color: #555;
+            background-color: #555; 
         }
         .empty-cart {
             margin-top: 20px;
         }
-    </style>
+
+        form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+}
+
+label {
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+input[type="text"],
+button {
+  padding: 8px;
+  margin-bottom: 16px;
+}
+
+button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+</style>
+
+
 </head>
 <body>
     <h1>Checkout</h1>
