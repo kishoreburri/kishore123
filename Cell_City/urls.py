@@ -31,6 +31,7 @@ urlpatterns = [
     path('delete_address/<int:address_id>/', views.delete_address, name='delete_address'),
     path('feedback/', views.feedback, name='feedback'),
     path('thank-you/', views.thank_you, name='thank_you'),
+    
 ]
 
 

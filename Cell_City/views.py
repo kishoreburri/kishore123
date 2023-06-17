@@ -200,6 +200,14 @@ def logout_view(request):
 
 @login_required
 def my_orders(request):
+    if request.method == 'POST':
+        order_id = request.POST.get('order_id')
+        order = get_object_or_404(Order, id=order_id)
+        if order.user == request.user and not order.is_cancelled:
+            order.is_cancelled = True
+            order.save()
+            messages.success(request, 'Order cancelled successfully.')
+
     orders = Order.objects.filter(user=request.user)
     return render(request, 'my_orders.html', {'orders': orders})
 
@@ -277,3 +285,4 @@ def feedback(request):
 
 def thank_you(request):
     return render(request, 'thank_you.html')
+
