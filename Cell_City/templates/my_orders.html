@@ -10,46 +10,92 @@
             font-family: Arial, sans-serif;
             background-color: #f2f2f2;
             padding: 20px;
+            background-image: url("https://helios-i.mashable.com/imagery/articles/06Go9Vbhq1du0dJoo1bbZQ6/images-297.fill.size_2000x1125.v1629162609.jpg");
+            background-size: cover;
         }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        .order {
-            background-color: #fff;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .order h3 {
-            margin-top: 0;
-            color: #333;
-        }
-        .order p {
-            margin-bottom: 10px;
-            color: #777;
-        }
-        .order a {
-            display: inline-block;
-            padding: 10px 15px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        .order a:hover {
-            background-color: #0056b3;
-        }
-        .no-orders {
-            text-align: center;
-            color: #777;
-        }
-    </style>
+       
+h1 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+
+#home {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  color: #333;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.order {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+
+.order h3 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+
+.order p {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+
+form {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+button[type="submit"] {
+  padding: 5px 10px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+
+a {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 16px;
+  text-decoration: none;
+  color: #007bff;
+}
+
+
+.cancelled {
+  font-size: 16px;
+  color: #dc3545;
+  font-weight: bold;
+}
+
+
+.no-orders {
+  font-size: 16px;
+  font-style: italic;
+  color: #888;
+}
+
+</style>
+
+
 </head>
 <body>
-    <h1>My Orders</h1>                <a href="{% url 'home' %}" class="btn btn-secondary" id="home">Return to Home</a>
+    <h1>My Orders</h1> <a href="{% url 'home' %}" class="btn btn-secondary" id="home">Return to Home</a>
 
     {% if orders %}
         {% for order in orders %}
