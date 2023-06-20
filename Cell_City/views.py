@@ -6,13 +6,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import SignUpForm, FeedbackForm, AddressForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth import login, logout
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserChangeForm
+from django.contrib.auth.decorators import login_required
+
 
 def home(request):
     mobile_brands = Brand.objects.all() 
@@ -38,7 +39,7 @@ def product_detail(request, product_id):
     }
     return render(request, 'product_detail.html', context)
 
-@login_required
+
 def increase_quantity(request, cart_item_id):
     cart_item = CartItem.objects.get(pk=cart_item_id)
     if cart_item.quantity < cart_item.product.stock_quantity:
@@ -46,7 +47,7 @@ def increase_quantity(request, cart_item_id):
         cart_item.save()
     return redirect('cart')
 
-@login_required
+
 def decrease_quantity(request, cart_item_id):
     cart_item = CartItem.objects.get(pk=cart_item_id)
     if cart_item.quantity > 1:
@@ -56,7 +57,7 @@ def decrease_quantity(request, cart_item_id):
         cart_item.delete()
     return redirect('cart')
 
-@login_required
+@login_required(login_url='/login/')
 def add_to_cart(request, product_id):
     if request.user.is_authenticated:
         product = Product.objects.get(pk=product_id)
@@ -66,7 +67,7 @@ def add_to_cart(request, product_id):
             cart_item.save()
     return redirect('cart')
 
-@login_required
+@login_required(login_url='/login/')
 def cart(request):
     cart_items = CartItem.objects.all()
     total_cost = 0
@@ -80,7 +81,7 @@ def cart(request):
     }
     return render(request, 'cart.html', context)
 
-@login_required
+@login_required(login_url='/login/')
 def wishlist(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
@@ -92,7 +93,7 @@ def wishlist(request):
         context = {'wishlist': wishlist}
         return render(request, 'wishlist.html', context)
 
-@login_required
+@login_required(login_url='/login/')
 def add_to_wishlist(request, product_id):
     if request.user.is_authenticated:
         product = Product.objects.get(pk=product_id)
@@ -103,7 +104,7 @@ def add_to_wishlist(request, product_id):
     else:
         return HttpResponse("Please login to add items to your wishlist.")
 
-@login_required
+
 def remove_from_wishlist(request, product_id):
     if request.user.is_authenticated:
         product = Product.objects.get(pk=product_id)
@@ -111,14 +112,7 @@ def remove_from_wishlist(request, product_id):
         wishlist.products.remove(product)
     return redirect('wishlist')
 
-from django.contrib.auth.decorators import login_required
-from .forms import AddressForm
 
-
-from django.contrib.auth.decorators import login_required
-from .forms import AddressForm
-
-@login_required
 def checkout(request):
     user = request.user
     cart_items = CartItem.objects.filter(user=user)
@@ -140,10 +134,6 @@ def checkout(request):
 
     return render(request, 'checkout.html', {'form': form, 'cart_items': cart_items, 'total_cost': total_cost})
 
-
-
-
-@login_required
 def payment_mode(request, order_id):
     order = Order.objects.get(id=order_id)
 
@@ -198,7 +188,7 @@ def logout_view(request):
     logout(request)
     return redirect('home')
 
-@login_required
+@login_required(login_url='/login/')
 def my_orders(request):
     if request.method == 'POST':
         order_id = request.POST.get('order_id')
@@ -211,9 +201,8 @@ def my_orders(request):
     orders = Order.objects.filter(user=request.user)
     return render(request, 'my_orders.html', {'orders': orders})
 
-from django.contrib.auth.forms import UserChangeForm
 
-@login_required
+@login_required(login_url='/login/')
 def profile(request):
     saved = False
     max_addresses_reached = False
@@ -267,8 +256,6 @@ def change_password(request):
         form = PasswordChangeForm(request.user)
     
     return render(request, 'change_password.html', {'form': form})
-
-
 
 
 def feedback(request):
