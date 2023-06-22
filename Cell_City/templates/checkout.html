@@ -117,74 +117,37 @@ button:hover {
             </tbody>
         </table>
         <p class="total-cost">Total Cost: {{ total_cost }}</p>
-
-
         <div class="form-container">
             <h3>Shipping Address</h3>
             <form method="POST">
                 {% csrf_token %}
-            <form method="POST" id="address-form">
-            {% csrf_token %}
-            
-            <div>
-                {% for address in addresses %}
-                <h2>Select Address:</h2>
-                <div>
-                    <input type="radio" id="address_{{ address.id }}" name="selected_address" value="{{ address.id }}">
-                    <label for="address_{{ address.id }}">{{ address }}</label>
-                </div>
-                {% endfor %}
-            </div>
+                
+                <label for="address_line_1">Address Line 1:</label>
+                <input type="text" id="address_line_1" name="address_line_1" required>
+                
+                <label for="address_line_2">Address Line 2:</label>
+                <input type="text" id="address_line_2" name="address_line_2">
+                
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city" required>
+                
+                <label for="state">State:</label>
+                <input type="text" id="state" name="state" required>
 
-            <button type="button" id="add-new-address-button">Add a New Address</button>
+                <label for="country">country:</label>
+                <input type="text" id="country" name="country" required>
+                
+                <label for="zip_code">Zip Code:</label>
+                <input type="text" id="zip_code" name="zip_code" required>
 
+                <label for="mobile_number">Mobile Number:</label>
+                <input type="text" id="mobile_number" name="mobile_number" required>
                 
                 <button type="submit">Confirm Order</button>
               </form>
         </div>
-
-        <div id="new-address-section" style="display: none;">
-            <h2>Add a New Address:</h2>
-            <label for="address_line_1">Address Line 1:</label>
-            <input type="text" id="address_line_1" name="address_line_1" required>
-
-            <label for="address_line_2">Address Line 2:</label>
-            <input type="text" id="address_line_2" name="address_line_2">
-
-            <label for="city">City:</label>
-            <input type="text" id="city" name="city" required>
-
-            <label for="state">State:</label>
-            <input type="text" id="state" name="state" required>
-
-            <label for="country">Country:</label>
-            <input type="text" id="country" name="country" required>
-
-            <label for="zip_code">Zip Code:</label>
-            <input type="text" id="zip_code" name="zip_code" required>
-
-            <label for="mobile_number">Mobile Number:</label>
-            <input type="text" id="mobile_number" name="mobile_number" required>
-        </div>
-
-
-
     {% else %}
         <p class="empty-cart">Your cart is empty.</p>
     {% endif %}
-
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Hide the "Add a New Address" section initially
-        $('#new-address-section').hide();
-
-        // Show/hide the "Add a New Address" section based on button click
-        $('#add-new-address-button').on('click', function() {
-            $('#new-address-section').toggle();
-        });
-    });
-</script>
 </body>
 </html>
