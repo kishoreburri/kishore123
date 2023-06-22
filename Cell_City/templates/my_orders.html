@@ -95,29 +95,29 @@ a {
 
 </head>
 <body>
-    <h1>My Orders</h1> <a href="{% url 'home' %}" class="btn btn-secondary" id="home">Return to Home</a>
+  <h1>My Orders</h1>
+  <a href="{% url 'home' %}" class="btn btn-secondary" id="home">Return to Home</a>
 
-    {% if orders %}
-        {% for order in orders %}
-        <div class="order">
-            <h3>Order ID: {{ order.order_id }}</h3>
-            <p>Order Date: {{ order.order_date }}</p>
-            <p>Total: {{ order.total_cost }}</p>
-            {% if not order.is_cancelled %}
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="order_id" value="{{ order.id }}">
-                    <button type="submit" class="btn btn-danger">Cancel Order</button>
-                </form>
-                <a href="{% url 'invoice' order.order_id %}">View Invoice</a>
-
-            {% else %}
-                <p class="cancelled">Order Cancelled</p>
-            {% endif %}
-        </div>
-        {% endfor %}
-    {% else %}
-        <p class="no-orders">No orders found.</p>
-    {% endif %}
+  {% if orders %}
+      {% for order in orders %}
+      <div class="order">
+          <h3>Order ID: {{ order.order_id }}</h3>
+          <p>Order Date: {{ order.order_date }}</p>
+          <p>Total: {{ order.total_cost }}</p>
+          {% if not order.is_cancelled %}
+              <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="order_id" value="{{ order.id }}">
+                  <button type="submit" class="btn btn-danger">Cancel Order</button>
+              </form>
+              <a href="{% url 'invoice' order.order_id %}">View Invoice</a>
+          {% else %}
+              <p class="cancelled">Order Cancelled</p>
+          {% endif %}
+      </div>
+      {% endfor %}
+  {% else %}
+      <p class="no-orders">No orders found.</p>
+  {% endif %}
 </body>
 </html>

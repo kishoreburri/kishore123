@@ -33,12 +33,19 @@ class ProductSpecification(models.Model):
 
     def __str__(self):
         return f'{self.name}: {self.value}'
+    
+    def decrease_stock_quantity(self, quantity):
+        if self.stock_quantity >= quantity:
+            self.stock_quantity -= quantity
+            self.save()
+            return True
+        return False
 
 
 class CartItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=0)
+    quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return self.user.username
@@ -75,8 +82,7 @@ class Order(models.Model):
     order_id = models.CharField(max_length=20, unique=True)
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    is_cancelled = models.BooleanField(default=False)  # New field
-
+    is_cancelled = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.order_id:
@@ -85,6 +91,21 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order #{self.order_id} - {self.user.username}"
+
+    def cancel_order(self):
+        if not self.is_cancelled:
+            self.is_cancelled = True
+            self.save()
+            order_items = OrderItem.objects.filter(order=self)
+            for order_item in order_items:
+                order_item.product.stock_quantity += order_item.quantity
+                order_item.product.save()
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
 
 
 class Feedback(models.Model):

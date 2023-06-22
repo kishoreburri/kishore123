@@ -1,18 +1,12 @@
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
-from .models import Brand, Product, CartItem, Wishlist, Order, Address
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.urls import reverse
-from django.contrib.auth.models import User
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .forms import SignUpForm, FeedbackForm, AddressForm
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth import login, logout
-from django.contrib.auth.forms import AuthenticationForm, UserChangeForm
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash, logout
+from django.contrib import messages
+from .models import Brand, Product, CartItem, Wishlist, Order, Address, OrderItem
+from .forms import SignUpForm, FeedbackForm, AddressForm
 
 
 def home(request):
@@ -21,6 +15,7 @@ def home(request):
         'mobile_brands': mobile_brands
     }
     return render(request, 'home.html', context)
+
 
 def products(request, brand_id):
     brand = Brand.objects.get(id=brand_id)
@@ -57,15 +52,14 @@ def decrease_quantity(request, cart_item_id):
         cart_item.delete()
     return redirect('cart')
 
+
 @login_required(login_url='/login/')
 def add_to_cart(request, product_id):
     if request.user.is_authenticated:
         product = Product.objects.get(pk=product_id)
         cart_item, created = CartItem.objects.get_or_create(user=request.user, product=product)
-        if not created:
-            cart_item.quantity =+ 1
-            cart_item.save()
     return redirect('cart')
+
 
 @login_required(login_url='/login/')
 def cart(request):
@@ -81,6 +75,7 @@ def cart(request):
     }
     return render(request, 'cart.html', context)
 
+
 @login_required(login_url='/login/')
 def wishlist(request):
     if request.method == 'POST':
@@ -92,6 +87,7 @@ def wishlist(request):
         wishlist = Wishlist.objects.filter(user=request.user).first()
         context = {'wishlist': wishlist}
         return render(request, 'wishlist.html', context)
+
 
 @login_required(login_url='/login/')
 def add_to_wishlist(request, product_id):
@@ -127,12 +123,19 @@ def checkout(request):
             address.customer = user
             address.save()
             order = Order.objects.create(user=user, address=address, price=total_cost, total_cost=total_cost)
+
+            for cart_item in cart_items:
+                OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity)
+                cart_item.product.stock_quantity -= cart_item.quantity
+                cart_item.product.save()
+
             cart_items.delete()
             return redirect('payment_mode', order_id=order.id)
     else:
         form = AddressForm()
 
     return render(request, 'checkout.html', {'form': form, 'cart_items': cart_items, 'total_cost': total_cost})
+
 
 def payment_mode(request, order_id):
     order = Order.objects.get(id=order_id)
@@ -143,16 +146,20 @@ def payment_mode(request, order_id):
 
     return render(request, 'payment_mode.html')
 
+
 def order_confirmation(request, order_id):
     order = Order.objects.get(id=order_id)
     return render(request, 'order_confirmation.html', {'order': order})
+
 
 def view_invoice(request, order_id):
     order = get_object_or_404(Order, order_id=order_id)
     return render(request, 'invoice.html', {'order': order})
 
+
 def contact(request):
     return render(request, 'contact.html')
+
 
 def search_results(request):
     query = request.GET.get('query')
@@ -163,6 +170,7 @@ def search_results(request):
     }
     return render(request, 'search_results.html', context)
 
+
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -172,6 +180,7 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
+
 
 def signup(request):
     if request.method == 'POST':
@@ -184,9 +193,11 @@ def signup(request):
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
 
+
 def logout_view(request):
     logout(request)
     return redirect('home')
+
 
 @login_required(login_url='/login/')
 def my_orders(request):
@@ -196,6 +207,13 @@ def my_orders(request):
         if order.user == request.user and not order.is_cancelled:
             order.is_cancelled = True
             order.save()
+            
+            order_items = OrderItem.objects.filter(order=order)
+            for order_item in order_items:
+                product = order_item.product
+                product.stock_quantity += order_item.quantity
+                product.save()
+                
             messages.success(request, 'Order cancelled successfully.')
 
     orders = Order.objects.filter(user=request.user)
@@ -228,6 +246,7 @@ def profile(request):
 
     return render(request, 'profile.html', {'user': request.user, 'form': form, 'address_form': address_form, 'saved': saved, 'addresses': addresses, 'max_addresses_reached': max_addresses_reached})
 
+
 def edit_address(request, address_id):
     address = Address.objects.get(id=address_id)
     if request.method == 'POST':
@@ -237,13 +256,15 @@ def edit_address(request, address_id):
             return redirect('profile')
     else:
         form = AddressForm(instance=address)
-    
+
     return render(request, 'edit_address.html', {'form': form, 'address': address})
+
 
 def delete_address(request, address_id):
     address = Address.objects.get(id=address_id)
     address.delete()
     return redirect('profile')
+
 
 def change_password(request):
     if request.method == 'POST':
@@ -254,7 +275,7 @@ def change_password(request):
             return redirect('profile')
     else:
         form = PasswordChangeForm(request.user)
-    
+
     return render(request, 'change_password.html', {'form': form})
 
 
@@ -266,10 +287,9 @@ def feedback(request):
             return redirect('thank_you')
     else:
         form = FeedbackForm()
-    
+
     return render(request, 'feedback.html', {'form': form})
 
 
 def thank_you(request):
     return render(request, 'thank_you.html')
-
