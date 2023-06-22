@@ -11,23 +11,26 @@
         body {
             font-family: Arial, sans-serif;
             padding: 20px;
-            background-color:burlywood;
-
+            background-color: burlywood;
         }
+        
         h1, h2 {
             margin-bottom: 20px;
             text-align: center;
         }
+        
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
+        
         th, td {
             padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
+        
         .form-container {
             max-width: 500px;
             margin: 0 auto;
@@ -36,15 +39,14 @@
             border-radius: 5px;
             text-align: center;
         }
-        /* form {
-            margin-top: 20px;
-        } */
+        
         .total-cost {
             font-weight: bold;
             font-size: 18px;
             margin-top: 20px;
         }
-         /* button {
+        
+        button {
             display: inline-block;
             padding: 10px 15px;
             background-color: #333;
@@ -53,44 +55,78 @@
             border: none;
             cursor: pointer;
             transition: background-color 0.3s ease;
-        } */
+        }
+        
         button:hover {
             background-color: #555; 
         }
+        
         .empty-cart {
             margin-top: 20px;
         }
-
+        
         form {
-  display: flex;
-  flex-direction: column;
-  max-width: 400px;
-}
-
-label {
-  margin-bottom: 8px;
-  font-weight: bold;
-}
-
-input[type="text"],
-button {
-  padding: 8px;
-  margin-bottom: 16px;
-}
-
-button {
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-</style>
-
-
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            display: block;
+        }
+        
+        input[type="text"],
+        button {
+            padding: 8px;
+            margin-bottom: 16px;
+        }
+        
+        button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .address-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .address-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+        
+        hr {
+            margin: 20px 0;
+            border: 0;
+            border-top: 1px solid #ddd;
+        }
+    </style>
 </head>
 <body>
     <h1>Checkout</h1>
@@ -117,37 +153,72 @@ button:hover {
             </tbody>
         </table>
         <p class="total-cost">Total Cost: {{ total_cost }}</p>
-        <div class="form-container">
-            <h3>Shipping Address</h3>
-            <form method="POST">
+
+        <div class="address-container">
+                {% if addresses %}
+                <h3>Select Address:</h3>
+                <form id="select-address-form" method="post" action="{% url 'checkout' %}">
+                    {% csrf_token %}
+                    
+                    {% for address in addresses %}
+                        <div class="address-card">
+                            <input type="radio" id="address_{{ address.id }}" name="selected_address" value="{{ address.id }}">
+                            <label for="address_{{ address.id }}">
+                                <strong>Address Line 1:</strong> {{ address.address_line_1 }}<br>
+                                <strong>Address Line 2:</strong> {{ address.address_line_2 }}<br>
+                                <strong>City:</strong> {{ address.city }}<br>
+                                <strong>State:</strong> {{ address.state }}<br>
+                                <strong>Country:</strong> {{ address.country }}<br>
+                                <strong>Zip Code:</strong> {{ address.zip_code }}<br>
+                                <strong>Mobile Number:</strong> {{ address.mobile_number }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                    
+                    <button type="submit" class="btn btn-primary">Confirm Order</button>
+                </form>
+                
+                <hr>
+            {% endif %}
+            
+            <button id="add-address-button" class="btn btn-primary">Add New Address</button>
+            
+            <form id="add-address-form" class="add-address-form" method="post" action="{% url 'checkout' %}">
                 {% csrf_token %}
-                
-                <label for="address_line_1">Address Line 1:</label>
-                <input type="text" id="address_line_1" name="address_line_1" required>
-                
-                <label for="address_line_2">Address Line 2:</label>
-                <input type="text" id="address_line_2" name="address_line_2">
-                
-                <label for="city">City:</label>
-                <input type="text" id="city" name="city" required>
-                
-                <label for="state">State:</label>
-                <input type="text" id="state" name="state" required>
-
-                <label for="country">country:</label>
-                <input type="text" id="country" name="country" required>
-                
-                <label for="zip_code">Zip Code:</label>
-                <input type="text" id="zip_code" name="zip_code" required>
-
-                <label for="mobile_number">Mobile Number:</label>
-                <input type="text" id="mobile_number" name="mobile_number" required>
-                
-                <button type="submit">Confirm Order</button>
-              </form>
+                <div id="address-inputs" style="display: none;">
+                    <label for="address_line_1">Address Line 1:</label>
+                    <input type="text" id="address_line_1" name="address_line_1" required>
+                    <label for="address_line_2">Address Line 2:</label>
+                    <input type="text" id="address_line_2" name="address_line_2">
+                    <label for="city">City:</label>
+                    <input type="text" id="city" name="city" required>
+                    <label for="state">State:</label>
+                    <input type="text" id="state" name="state" required>
+                    <label for="country">Country:</label>
+                    <input type="text" id="country" name="country" required>
+                    <label for="zip_code">Zip Code:</label>
+                    <input type="text" id="zip_code" name="zip_code" required>
+                    <label for="mobile_number">Mobile Number:</label>
+                    <input type="text" id="mobile_number" name="mobile_number" required><br>
+                    <button type="submit" class="btn btn-primary" id="save-address-button">Proceed For Order</button>
+                </div>
+            </form>
         </div>
     {% else %}
         <p class="empty-cart">Your cart is empty.</p>
     {% endif %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const addAddressButton = document.getElementById('add-address-button');
+            const addAddressForm = document.getElementById('add-address-form');
+            const addressInputs = document.getElementById('address-inputs');
+            
+            addAddressButton.addEventListener('click', function () {
+                addAddressButton.style.display = 'none';
+                addressInputs.style.display = 'block';
+            });
+        });
+    </script>
 </body>
 </html>

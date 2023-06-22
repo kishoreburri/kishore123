@@ -108,6 +108,36 @@ def remove_from_wishlist(request, product_id):
         wishlist.products.remove(product)
     return redirect('wishlist')
 
+@login_required(login_url='/login/')
+def profile(request):
+    saved = False
+    max_addresses_reached = False
+    user = request.user
+
+    if request.method == 'POST':
+        address_form = AddressForm(request.POST)
+
+        if address_form.is_valid():
+            if Address.objects.filter(customer=user).count() < 3:
+                address = address_form.save(commit=False)
+                address.customer = user
+                address.save()
+                saved = True
+            else:
+                max_addresses_reached = True
+    else:
+        address_form = AddressForm()
+
+    addresses = Address.objects.filter(customer=user)
+
+    return render(request, 'profile.html', {
+        'user': user,
+        'address_form': address_form,
+        'saved': saved,
+        'addresses': addresses,
+        'max_addresses_reached': max_addresses_reached
+    })
+
 
 def checkout(request):
     user = request.user
@@ -117,11 +147,19 @@ def checkout(request):
         total_cost += item.product.price * item.quantity
 
     if request.method == 'POST':
-        form = AddressForm(request.POST)
-        if form.is_valid():
-            address = form.save(commit=False)
-            address.customer = user
-            address.save()
+        selected_address_id = request.POST.get('selected_address')
+        if selected_address_id:
+            address = get_object_or_404(Address, id=selected_address_id)
+        else:
+            form = AddressForm(request.POST)
+            if form.is_valid():
+                address = form.save(commit=False)
+                address.customer = user
+                address.save()
+            else:
+                address = None
+
+        if address:
             order = Order.objects.create(user=user, address=address, price=total_cost, total_cost=total_cost)
 
             for cart_item in cart_items:
@@ -134,7 +172,10 @@ def checkout(request):
     else:
         form = AddressForm()
 
-    return render(request, 'checkout.html', {'form': form, 'cart_items': cart_items, 'total_cost': total_cost})
+    addresses = Address.objects.filter(customer=user)
+
+    return render(request, 'checkout.html', {'form': form, 'cart_items': cart_items, 'total_cost': total_cost, 'addresses': addresses})
+
 
 
 def payment_mode(request, order_id):
@@ -218,33 +259,6 @@ def my_orders(request):
 
     orders = Order.objects.filter(user=request.user)
     return render(request, 'my_orders.html', {'orders': orders})
-
-
-@login_required(login_url='/login/')
-def profile(request):
-    saved = False
-    max_addresses_reached = False
-
-    if request.method == 'POST':
-        form = UserChangeForm(request.POST, instance=request.user)
-        address_form = AddressForm(request.POST)
-
-        if form.is_valid() and address_form.is_valid():
-            form.save()
-            if Address.objects.filter(customer=request.user).count() < 3:
-                address = address_form.save(commit=False)
-                address.customer = request.user
-                address.save()
-                saved = True
-            else:
-                max_addresses_reached = True
-    else:
-        form = UserChangeForm(instance=request.user)
-        address_form = AddressForm()
-
-    addresses = Address.objects.filter(customer=request.user)
-
-    return render(request, 'profile.html', {'user': request.user, 'form': form, 'address_form': address_form, 'saved': saved, 'addresses': addresses, 'max_addresses_reached': max_addresses_reached})
 
 
 def edit_address(request, address_id):
