@@ -7,6 +7,8 @@ from django.contrib.auth import update_session_auth_hash, logout
 from django.contrib import messages
 from .models import Brand, Product, CartItem, Wishlist, Order, Address, OrderItem
 from .forms import SignUpForm, FeedbackForm, AddressForm
+from fuzzywuzzy import fuzz
+from django.db.models import Q
 
 
 def home(request):
@@ -204,7 +206,24 @@ def contact(request):
 
 def search_results(request):
     query = request.GET.get('query')
-    results = Product.objects.filter(name__icontains=query)
+    results = None
+
+    if query:
+        fuzzy_results = Product.objects.filter(
+            Q(name__icontains=query) |
+            Q(name__icontains=query.replace(' ', '')) |
+            Q(name__icontains=query.lower())
+        )
+
+        similarity_scores = [
+            (result, fuzz.token_set_ratio(query.lower(), result.name.lower()))
+            for result in fuzzy_results
+        ]
+
+        sorted_results = sorted(similarity_scores, key=lambda x: x[1], reverse=True)
+
+        results = [result for result, _ in sorted_results]
+
     context = {
         'query': query,
         'results': results,
@@ -293,11 +312,37 @@ def change_password(request):
     return render(request, 'change_password.html', {'form': form})
 
 
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+
+@login_required
 def feedback(request):
     if request.method == 'POST':
         form = FeedbackForm(request.POST)
         if form.is_valid():
-            form.save()
+            feedback = form.save(commit=False)
+            feedback.save()
+            
+            from_email = request.user.email
+            to_email = 'sumanthking928@gmail.com'
+
+            # Render the email template with the feedback data
+            email_context = {
+                'name': feedback.name,
+                'email': feedback.email,
+                'message': feedback.message
+            }
+            email_body = render_to_string('feedback_email.html', email_context)
+
+            send_mail(
+                'New Feedback Submission',
+                email_body,
+                from_email,
+                [to_email],
+                fail_silently=False,
+            )
+
             return redirect('thank_you')
     else:
         form = FeedbackForm()

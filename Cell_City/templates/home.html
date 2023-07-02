@@ -19,10 +19,15 @@
       <div class="container-fluid">
        <img src="https://www.cellcitysarnia.com/image/cache/catalog/logo-269x203.png" alt="">
         
-        <form class="d-flex" role="search" method="GET" action="{% url 'search_results' %}">
-          <input class="form-control me-2" type="text" name="query" placeholder="Search...">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
+       <form class="d-flex" role="search" method="GET" action="{% url 'search_results' %}">
+        <input class="form-control me-2" type="text" name="query" placeholder="Search...">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      
+        <button id="voice-search-btn" class="btn btn-outline-primary" type="button">
+          <i class="fas fa-microphone"></i>
+        </button>
+      </form>
+      
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -72,7 +77,7 @@
               {% if brand.name == 'Samsung' %}
                 <div class="carousel-item active">
                   <a href="{% url 'products' brand_id=brand.id %}">
-                    <img src="https://m-cdn.phonearena.com/images/article/145222-wide-two_1200/Galaxy-S23-Galaxy-S23-posters-leak-with-focus-on-photography.jpg" alt="{{ brand.name }}">
+                    <img src="https://c4.wallpaperflare.com/wallpaper/710/681/273/silver-logo-samsung-wallpaper-preview.jpg" alt="{{ brand.name }}">
                   </a>
                 </div>
               
@@ -80,7 +85,7 @@
               {% elif brand.name == 'One Plus' %}
                 <div class="carousel-item">
                   <a href="{% url 'products' brand_id=brand.id %}">
-                    <img src="https://i.ytimg.com/vi/LlvtyEGyiSk/maxresdefault.jpg" class="d-block w-100" alt="{{ brand.name }}">
+                    <img src="https://assets.mspimages.in/gear/wp-content/uploads/2020/03/OnePlus-New-Logo.jpg" class="d-block w-100" alt="{{ brand.name }}">
                   </a>
                 </div>
               
@@ -158,10 +163,31 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>--  -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
-    
+<script>
+  $('#voice-search-btn').on('click', function() {
+    startVoiceSearch();
+  });
+  
+  function startVoiceSearch() {
+    const recognition = new webkitSpeechRecognition();
+  
+    recognition.lang = 'en-US';
+    recognition.start();
+  
+    recognition.onresult = function(event) {
+      const recognizedText = event.results[0][0].transcript;
+      const query = recognizedText.trim().replace(/\.$/, '');
+      
+      $('input[name="query"]').val(query);
+      
+      $('form').submit();
+    };
+  }
+</script>
+ 
 </body>
 </html>
 

@@ -73,12 +73,14 @@ class Address(models.Model):
 
 
 from .utils import generate_order_id
+from django.utils import timezone
+
 
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     total_cost = models.DecimalField(max_digits=10, decimal_places=2)
-    order_date = models.DateTimeField(auto_now_add=True)
+    order_date = models.DateTimeField(default=timezone.now)
     order_id = models.CharField(max_length=20, unique=True)
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=8, decimal_places=2)

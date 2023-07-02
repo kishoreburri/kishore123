@@ -134,7 +134,12 @@ HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
         'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
-        'INCLUDE_SPELLING': True,
     },
 }
-HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'sumanthking928@gmail.com'
+EMAIL_HOST_PASSWORD = 'mzojxtoxcpfndeok'
+EMAIL_USE_TLS = True

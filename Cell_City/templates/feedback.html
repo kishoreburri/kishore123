@@ -10,26 +10,23 @@
 </head>
 <body>
     <main>
-      
-        <section class = "feed">
-            <h1>Feedback Form</h1>
-            <form method="POST" action="{% url 'feedback' %}">
-               {% csrf_token %}
-               <br>
-               {{ form.as_p }}
-               <label for="">Reviews</label>
-               <select name="" id="">
+        <form method="POST" action="{% url 'feedback' %}">
+            {% csrf_token %}
+            <br>
+            {{ form.as_p }}
+            <label for="">Reviews</label>
+            <select name="" id="">
+                <option value="">Select</option>
                 <option value="">worst</option>
                 <option value="">Good</option>
                 <option value="">Average</option>
                 <option value="">Excellent</option>
             </select>
-               <br>
-               <br>
-               <input type="submit" id="submitbtn" >
-             
-            </form>
-          </section>
+            <br>
+            <br>
+            <input type="submit" id="submitbtn">
+        </form>
+        
    </main>
 </body>
 </html>
@@ -41,6 +38,7 @@
     padding:0px;
 
 }
+
 
 body{
     background-image: url("https://thumbs.dreamstime.com/b/customer-experiences-concept-group-diversity-people-giving-feedback-via-mobile-phone-negative-to-positive-review-poor-184871851.jpg");
@@ -60,8 +58,10 @@ body{
 form{
     
     height:400px;
-    width:410px;
+    width:380px;
     background-color:black;
+    margin-top: 170px;
+    margin-left: 550px;
  
     padding: 10px;
     border-radius: 10px;
@@ -96,8 +96,6 @@ label,textarea{
 }
 #submitbtn:hover{
     background-color: rgb(140, 229, 140);
-
-   
 
 } 
 </style>
