@@ -103,7 +103,9 @@ a {
     <div class="order">
         <h3>Order ID: {{ order.order_id }}</h3>
         <p>Order Date: {{ order.order_date }}</p>
-        <p>Product Name: {{ order.orderitem.product.name }}</p>
+        {% for order_item in order.orderitem_set.all %}
+        <p>Product Name: {{ order_item.product.name }}</p>
+        {% endfor %}
         <p>Total: {{ order.total_cost }}</p>
         {% if not order.is_cancelled %}
             <form method="post">
