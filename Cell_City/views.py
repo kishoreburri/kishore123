@@ -315,25 +315,61 @@ def change_password(request):
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect
+from .forms import FeedbackForm
 
-@login_required
 def feedback(request):
     if request.method == 'POST':
         form = FeedbackForm(request.POST)
         if form.is_valid():
             feedback = form.save(commit=False)
             feedback.save()
-            
+
             from_email = request.user.email
             to_email = 'sumanthking928@gmail.com'
 
-            # Render the email template with the feedback data
             email_context = {
                 'name': feedback.name,
                 'email': feedback.email,
                 'message': feedback.message
             }
-            email_body = render_to_string('feedback_email.html', email_context)
+            email_body = render_to_string('feedback_email.html', context=email_context)
+
+            send_mail(
+                'New Feedback Submission',
+                'This is the plain text version of the email.',
+                from_email,
+                [to_email],
+                html_message=email_body,  # Set the content type to text/html
+                fail_silently=False,
+            )
+
+            return redirect('thank_you')
+    else:
+        form = FeedbackForm()
+
+    return render(request, 'feedback.html', {'form': form})
+
+
+@login_required(login_url='/login/')
+def feedback(request):
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            feedback = form.save(commit=False)
+            feedback.save()
+
+            from_email = request.user.email
+            to_email = 'sumanthking928@gmail.com'
+
+            email_context = {
+                'name': feedback.name,
+                'email': feedback.email,
+                'message': feedback.message
+            }
+            email_body = render_to_string('feedback_email.html', context=email_context)
 
             send_mail(
                 'New Feedback Submission',

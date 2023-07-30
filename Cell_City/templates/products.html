@@ -58,7 +58,7 @@
               </a>
               <div class="card-body">
                 <h3 class="card-title">{{ product.name }}</h3>
-                <p class="card-text">Price: ${{ product.price }}</p>
+                <p class="card-text">Price  :  {{ product.price }}</p>
 
                 <div class="buttons">
                 <form action="{% url 'add_to_cart' product.id %}" method="POST">
